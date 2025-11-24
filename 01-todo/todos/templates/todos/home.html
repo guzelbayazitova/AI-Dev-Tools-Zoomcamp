@@ -1,0 +1,30 @@
+{% extends 'todos/base.html' %}
+
+{% block content %}
+<h1>My TODO List</h1>
+<a href="{% url 'todo_create' %}" class="btn btn-primary">Add New TODO</a>
+
+{% for todo in todos %}
+<div class="todo-item {% if todo.is_completed %}completed{% endif %} {% if todo.is_overdue %}overdue{% endif %}">
+    <h3>{{ todo.title }}</h3>
+    {% if todo.description %}
+    <p>{{ todo.description }}</p>
+    {% endif %}
+    {% if todo.due_date %}
+    <p><strong>Due:</strong> {{ todo.due_date|date:"M d, Y H:i" }}</p>
+    {% endif %}
+    <p><strong>Status:</strong> {% if todo.is_completed %}Completed{% else %}Pending{% endif %}</p>
+    
+    <form action="{% url 'todo_toggle_complete' todo.pk %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn {% if todo.is_completed %}btn-warning{% else %}btn-success{% endif %}">
+            {% if todo.is_completed %}Mark Incomplete{% else %}Mark Complete{% endif %}
+        </button>
+    </form>
+    <a href="{% url 'todo_update' todo.pk %}" class="btn btn-primary">Edit</a>
+    <a href="{% url 'todo_delete' todo.pk %}" class="btn btn-danger">Delete</a>
+</div>
+{% empty %}
+<p>No todos yet. Create one to get started!</p>
+{% endfor %}
+{% endblock %}

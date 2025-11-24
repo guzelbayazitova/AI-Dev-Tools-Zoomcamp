@@ -1,0 +1,12 @@
+{% extends 'todos/base.html' %}
+
+{% block content %}
+<h1>{% if todo %}Edit{% else %}Create{% endif %} TODO</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Save</button>
+    <a href="{% url 'todo_list' %}" class="btn btn-danger">Cancel</a>
+</form>
+{% endblock %}
